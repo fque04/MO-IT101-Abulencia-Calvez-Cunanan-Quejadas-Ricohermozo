@@ -2,7 +2,6 @@ package com.mycompany.motorph;
 
 public class SalaryDeductions {
 
-    private static double taxableIncome;
     private static double salary;
     private static double sssContribution;
     private static double pagibigContribution;
@@ -10,14 +9,7 @@ public class SalaryDeductions {
     private static double witholdingTax;
     
 public static double calculateTaxableIncome(double salary, double sssContribution, double pagibigContribution, double philhealthContribution){
-    System.out.println(sssContribution + " " + pagibigContribution + " " + philhealthContribution);
     return salary - sssContribution - pagibigContribution - philhealthContribution; 
-}
-
-public static double getTaxableIncome() {
-    
-    return salary - sssContribution - pagibigContribution - philhealthContribution; 
-    
 }
 
     static double calculateSssContribution(double salary) { 
@@ -104,8 +96,24 @@ public static double getTaxableIncome() {
             1800.00;
 
     return philHealthContribution * PHILHEALTH_EMPLOYEE_SHARE;
+    
+    }
+    
+    public class TotalBenefits extends EmployeeData{
+        
+        public TotalBenefits(String employeeNumber, String lastName, String firstName, String birthday, String address, String phoneNumber, String sssNumber, String philhealthNumber, String tinNumber, String pagibigNumber, String status, String position, String immediateSupervisor, double basicSalary, double riceSubsidy, double phoneAllowance, double clothingAllowance, double grossSemiMonthlyRate, double hourlyRate) {
+            super(employeeNumber, lastName, firstName, birthday, address, phoneNumber, sssNumber, philhealthNumber, tinNumber, pagibigNumber, status, position, immediateSupervisor, basicSalary, riceSubsidy, phoneAllowance, clothingAllowance, grossSemiMonthlyRate, hourlyRate);
+        }
+        
+        private double calculateTotalBenefits(){
+            return getRiceSubsidy() + getPhoneAllowance() + getClothingAllowance();
+        }
+        public double getTotalBenefits(){
+            return calculateTotalBenefits();
+        }
+
+     
+    }
+    
 }
 
-
-   
-}
