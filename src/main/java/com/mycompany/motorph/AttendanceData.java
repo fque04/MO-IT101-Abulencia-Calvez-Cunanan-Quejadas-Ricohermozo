@@ -1,44 +1,15 @@
 package com.mycompany.motorph;
 
-public class AttendanceData {
-    private String employeeNumber;
-    private String lastName;
-    private String firstName;
+public class AttendanceData extends EmployeeData {
     private String date;
     private String timeIn;
     private String timeOut;
     
     public AttendanceData(String date, String timeIn, String timeOut, String employeeNumber, String lastName, String firstName){
-        this.employeeNumber = employeeNumber;
-        this.lastName = lastName;
-        this.firstName = firstName;
+        super(employeeNumber, lastName, firstName, null, null, null, null, null, null, null, null, null, null, 0, 0, 0, 0, 0, 0);
         this.date = date;
         this.timeIn = timeIn;
         this.timeOut = timeOut;  
-    }
-
-    public String getEmployeeNumber() {
-        return employeeNumber;
-    }
-
-    public void setEmployeeNumber(String employeeNumber) {
-        this.employeeNumber = employeeNumber;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
     }
 
     public String getDate() {
@@ -66,4 +37,3 @@ public class AttendanceData {
     }
     
 }
-
