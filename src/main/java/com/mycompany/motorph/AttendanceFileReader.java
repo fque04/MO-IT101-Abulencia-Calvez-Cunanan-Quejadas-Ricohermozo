@@ -10,23 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class AttendanceFileReader extends EmployeeData {
-
-    public List <AttendanceData> attendanceData = new ArrayList<AttendanceData>();
-
-    public AttendanceFileReader() {
-        super(null, null, null, null, null, null, null, null, null, null, null, null, null, 0, 0, 0, 0, 0, 0);
-    }
-      
-    public AttendanceFileReader(String employeeNumber, String lastName, String firstName) {
-        super(employeeNumber, lastName, firstName, null, null, null, null, null, null, null, null, null, null, 0, 0, 0, 0, 0, 0);
-    }
-
-    public List<AttendanceData> readAttendanceData() {
+public class AttendanceFileReader {
+    
+    public List<AttendanceData> readAttendanceData(String[] par) {
     List<AttendanceData> attendanceDataList = new ArrayList<>();
     File file = new File("C:\\Users\\Gen Calvez\\Documents\\NetBeansProjects\\MotorPH\\src\\main\\java\\com\\mycompany\\motorph\\Attendance.txt");
     try (Scanner scanner = new Scanner(file)) {
-        scanner.nextLine(); // Skip the header line
+        scanner.nextLine();
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
@@ -56,5 +46,4 @@ public class AttendanceFileReader extends EmployeeData {
     }
     return attendanceDataList;
 }
-
 }
