@@ -3,21 +3,20 @@ package com.mycompany.motorph;
 import java.util.*;
 public class CalculateHoursOfWork
 {
-    public static void main(String[] args)
+    public static void main(String[] a)
     {
        try
        {
 
-        List <AttendanceData> AttendanceDATA  =  new AttendanceFileReader().readAttendanceData(); 
+        List <AttendanceData> AttendanceDATA  =  new AttendanceFileReader().readAttendanceData(new String[]{}); 
         System.out.println(AttendanceDATA.get(0).getDate()+"");
-        System.out.println(validateDate(checkDate(AttendanceDATA.get(0).getDate() + "")));
-        System.out.println(validateDate(checkDate(AttendanceDATA.get(1).getDate() + "")));
-        System.out.println(validateDate(checkDate("01/09/2022")));  
-        System.out.println("Hours of Work: " + totalHours(AttendanceDATA, "10001", validateDate(checkDate("01/09/2022")), validateDate(checkDate("02/09/2022"))));
-        System.out.println("Hours of Work in Detail:\nTIME IN:" +
-        AttendanceDATA.get(0).getTimeIn() + "\nTIME OUT:" + AttendanceDATA.get(0).getTimeOut());
 
-        System.out.println("Hours Late: " + calculateHoursOfLate(AttendanceDATA, "10001"));
+        System.out.println("Hours of Work: " + ((totalHours(AttendanceDATA, "10001", validateDate(checkDate("01/09/2022")),
+        validateDate(checkDate("01/11/2022")))) - calculateHoursOfLate(AttendanceDATA, "10001", validateDate(checkDate("01/09/2022")), validateDate(checkDate("01/11/2022")))));
+
+
+        System.out.println("Hours Late: " + calculateHoursOfLate(AttendanceDATA, "10001", validateDate(checkDate("01/09/2022")), 
+        validateDate(checkDate("01/11/2022"))));
     
         }
        catch(Exception error)
@@ -26,19 +25,57 @@ public class CalculateHoursOfWork
        }
     }
 
-    public static int calculateHoursOfLate(List<AttendanceData> SampEmp, String empNumber)
+    public static int calculateHoursOfLate(List<AttendanceData> SampEmp, String empNumber, int startDate, int endDate)
     {
         int totalDeductions = 0;
         int x = 0;
+        boolean countLoop = true;
         while(x != SampEmp.size() - 1)
         {
-            if(SampEmp.get(x).getEmployeeNumber().equals(empNumber))
+            if(SampEmp.get(x).getEmployeeNumber().equals(empNumber) && validateDate(checkDate(SampEmp.get(x).getDate())) >= startDate &&
+            validateDate(checkDate(SampEmp.get(x).getDate())) < endDate)
             {
                 totalDeductions = totalDeductions + lateDeduction(SampEmp.get(x).getTimeIn());
+            }
+            else if(SampEmp.get(x).getEmployeeNumber().equals(empNumber) && validateDate(checkDate(SampEmp.get(x).getDate())) >= startDate &&
+            validateDate(checkDate(SampEmp.get(x).getDate())) <= endDate)
+            {
+                totalDeductions = totalDeductions + lateDeduction(SampEmp.get(x).getTimeIn());
+            }
+
+            if(x == SampEmp.size() - 1)
+            {
+                countLoop = false;
             }
             x++;
         }
         return totalDeductions;
+    }
+
+    public static int calculateDaysOfWork(List<AttendanceData> SampEmp, String employeeID, int startDate, int endDate)
+    {
+        int x = 0;
+        boolean countLoop = true;
+        int daysOfWork = 0;
+        while(countLoop)
+        {
+            if(SampEmp.get(x).getEmployeeNumber().equals(employeeID) && validateDate(checkDate(SampEmp.get(x).getDate())) >= startDate &&
+            validateDate(checkDate(SampEmp.get(x).getDate())) != endDate)
+            {
+                daysOfWork++;
+            }
+            else if(SampEmp.get(x).getEmployeeNumber().equals(employeeID) && validateDate(checkDate(SampEmp.get(x).getDate())) >= startDate &&
+            validateDate(checkDate(SampEmp.get(x).getDate())) <= endDate)
+            {
+                daysOfWork++;
+            }
+
+            if(x == SampEmp.size() - 1)
+            {
+                countLoop = false;
+            }
+        }
+        return daysOfWork;
     }
 
     public static int lateDeduction(String timeIn)
@@ -147,4 +184,3 @@ public class CalculateHoursOfWork
 
     }
 }
-
