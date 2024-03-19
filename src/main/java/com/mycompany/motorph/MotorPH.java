@@ -1,5 +1,3 @@
-package com.mycompany.motorph;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
@@ -14,7 +12,6 @@ import java.util.Map;
 import java.util.Scanner;
 import javax.swing.*;
 
-
 public class MotorPH {
 
     private static Scanner fileScanner;
@@ -22,34 +19,36 @@ public class MotorPH {
     private static List<EmployeeData> employees;
     protected static int hoursOfWork;
     
-    public static void main(String[] args) 
-    {
+    public static void main(String[] args) {
         boolean loginProceed = true;
         String username = "",  password = "";
-        while(loginProceed)
-        {
-             username = JOptionPane.showInputDialog(null, "Enter your username");
-             password  = JOptionPane.showInputDialog(null, "Enter password");
+        // Login loop until successful
+        while(loginProceed) {
+            // Prompt for username and password using JOptionPane
+            username = JOptionPane.showInputDialog(null, "Enter your username");
+            password = JOptionPane.showInputDialog(null, "Enter password");
 
-             if(username.equals("Admin") && password.equals("admin"))
-             {
+            // Check if username and password match
+            if(username.equals("Admin") && password.equals("admin")) {
                 loginProceed = false;
-             }
-             else{
+            } else {
+                // If not matching, show error message
                 JOptionPane.showMessageDialog(null, "Invalid Username or Password");
-             }
+            }
         }
 
-        if(username.equals("Admin") && password.equals("admin"))
-        {
+        // If login successful
+        if(username.equals("Admin") && password.equals("admin")) {
+            // Display login successful message using JOptionPane
             JOptionPane.showMessageDialog(null, "Login Successful");
+            // Retrieve employee data
             employees = EmployeeFileReader.getEmployees();
+            // Display options for the user to choose from
             System.out.println("===========================================");
             System.out.println("   MotorPH Master Data Management System   ");
             System.out.println("===========================================");
             System.out.println("1. Payroll");
             System.out.println("2. Attendance");
-
             System.out.println("3. Employee Masterlist Data");
             System.out.println("===========================================");
             
@@ -68,51 +67,45 @@ public class MotorPH {
                     markAttendance();
                     break;
                                        
-                    case 3:
+                case 3:
                     EmployeeFileReader.main(new String[]{});
                     viewEmployeeProfiles();
                     break;
-
             
                 default:
                     System.out.println("Invalid option. Please try again.");
                     break;
-                        
             }
             input.close();
         }
-
-        
     }
 
-    public static boolean validateDate(String date)
-    {
+    // Validate date format (MM/dd/yyyy)
+    public static boolean validateDate(String date) {
         boolean shouldContinue = false;
 
-        if(date.length() < 10)
-        {
+        if(date.length() < 10) {
             shouldContinue = false;
-            
+        } else if(date.length() == 10) {
+            shouldContinue = true;
         }
-        else if(date.length() == 10)
-        shouldContinue = true;
-
         return shouldContinue;
     }
     
+    // Method to handle payroll
     public static void payroll(Scanner input, List <EmployeeData> employees) {
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy") //02/01/2000
-            .withResolverStyle(ResolverStyle.SMART);
+        // DateTimeFormatter for date
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy").withResolverStyle(ResolverStyle.SMART);
 
-            String startDateInput = "";
-            LocalDate startDate = null;
-        while(validateDate(startDateInput) == false)
-        {
+        String startDateInput = "";
+        LocalDate startDate = null;
+        // Loop until valid start date is provided
+        while(validateDate(startDateInput) == false) {
             System.out.print("Enter start date (MM/dd/yyyy): ");
             startDateInput = input.nextLine();
 
             try {
-                 startDate = LocalDate.parse(startDateInput, dateFormatter);
+                startDate = LocalDate.parse(startDateInput, dateFormatter);
             } catch (Exception e) {
                 System.out.println("Invalid Time Format! Please Enter Date with the format: MM/dd/yyyy");
             }
@@ -120,116 +113,130 @@ public class MotorPH {
 
         LocalDate endDate = null;
         String endDateInput = "";
-        while(validateDate(endDateInput) == false)
-        {
+        // Loop until valid end date is provided
+        while(validateDate(endDateInput) == false) {
             System.out.print("Enter end date (MM/dd/yyyy): ");
             endDateInput = input.nextLine();
 
             try {
-                 endDate = LocalDate.parse(startDateInput, dateFormatter);
+                endDate = LocalDate.parse(startDateInput, dateFormatter);
             } catch (Exception e) {
                 System.out.println("Invalid Time Format! Please Enter Date with the format: MM/dd/yyyy");
             }
         }
       
-    if (startDate != null && endDate != null) {
-        System.out.print("Enter employee number: ");
-        employeeNumber = input.nextLine();
+        if (startDate != null && endDate != null) {
+            // Enter employee number
+            System.out.print("Enter employee number: ");
+            employeeNumber = input.nextLine();
 
-        EmployeeData employee = null;
-        for (EmployeeData e : employees) {
-            if (e.getEmployeeNumber().equals(employeeNumber)) {
-                employee = e;
-                break;
+            EmployeeData employee = null;
+            // Search for employee by number
+            for (EmployeeData e : employees) {
+                if (e.getEmployeeNumber().equals(employeeNumber)) {
+                    employee = e;
+                    break;
+                }
             }
-        }
 
-        if (employee == null) {
-            System.out.println("Employee not found.");
-            return;
-        }
-        
-        List <AttendanceData> AttendanceDATA  =  new AttendanceFileReader().readAttendanceData(new String[]{}); 
-        double hoursOfWorkVar = CalculateHoursOfWork.totalHours(AttendanceDATA, employeeNumber, CalculateHoursOfWork.validateDate(CalculateHoursOfWork.checkDate(startDateInput)), CalculateHoursOfWork.validateDate(CalculateHoursOfWork.checkDate(endDateInput)));
-        double grossIncome = 0;
-        System.out.println("Employee Number: " + employee.getEmployeeNumber());
-        System.out.println("Last Name: " + employee.getLastName());
-        System.out.println("First Name: " + employee.getFirstName());
-        System.out.println("Position: " + employee.getPosition());
-        System.out.println("Status: " + employee.getStatus());
-        System.out.println("\nEarnings");
-        System.out.println("Monthly Rate: " + String.format("%.2f", employee.getBasicSalary()));
-        System.out.println("Hourly Rate: " + String.format("%.2f", employee.getHourlyRate()));
-        System.out.println("Hours of Work: " + ((int)(hoursOfWorkVar) - CalculateHoursOfWork.calculateHoursOfLate(AttendanceDATA,
-        employee.getEmployeeNumber(), CalculateHoursOfWork.validateDate(CalculateHoursOfWork.checkDate(startDateInput)),
-        CalculateHoursOfWork.validateDate(CalculateHoursOfWork.checkDate(endDateInput))))); 
-        System.out.println("Late Deduction: " + (CalculateHoursOfWork.calculateHoursOfLate(AttendanceDATA,
-        employee.getEmployeeNumber(), CalculateHoursOfWork.validateDate(CalculateHoursOfWork.checkDate(startDateInput)),
-        CalculateHoursOfWork.validateDate(CalculateHoursOfWork.checkDate(endDateInput))) * employee.getHourlyRate()));
-        grossIncome = (int)(hoursOfWorkVar - CalculateHoursOfWork.calculateHoursOfLate(AttendanceDATA,
-        employee.getEmployeeNumber(), CalculateHoursOfWork.validateDate(CalculateHoursOfWork.checkDate(startDateInput)),
-        CalculateHoursOfWork.validateDate(CalculateHoursOfWork.checkDate(endDateInput))))  * employee.getHourlyRate();
-        System.out.println("Gross Income: " + String.format("%.2f", grossIncome));
-        System.out.println("\nBenefits");
-        System.out.println("Rice Subsidy: " + String.format("%.2f", employee.getRiceSubsidy()));
-        System.out.println("Phone Allowance: " + String.format("%.2f", employee.getPhoneAllowance()));
-        System.out.println("Clothing Allowance: " + String.format("%.2f", employee.getClothingAllowance()));
-        double totalBenefits = employee.getRiceSubsidy() + employee.getPhoneAllowance() + employee.getClothingAllowance();
-        System.out.println("Total Benefits: " + String.format("%.2f", totalBenefits));
-        System.out.println("\nDeductions");
-        System.out.println("SSS Deductions: " + String.format("%.2f", SalaryDeductions.calculateSssContribution(employee.getBasicSalary()))); 
-        System.out.println("Pag-ibig Contribution: " + String.format("%.2f", SalaryDeductions.calculatePagibigContribution(employee.getBasicSalary())));
-        System.out.println("Philhealth Contribution: " + String.format("%.2f", SalaryDeductions.calculatePhilhealthContribution(employee.getBasicSalary())));
-        double TaxableIncome = employee.getBasicSalary() - SalaryDeductions.calculatePagibigContribution(employee.getBasicSalary()) -
-        SalaryDeductions.calculatePhilhealthContribution(employee.getBasicSalary()) - SalaryDeductions.calculateSssContribution(employee.getBasicSalary())
-        - (CalculateHoursOfWork.calculateHoursOfLate(AttendanceDATA,
-        employee.getEmployeeNumber(), CalculateHoursOfWork.validateDate(CalculateHoursOfWork.checkDate(startDateInput)),
-        CalculateHoursOfWork.validateDate(CalculateHoursOfWork.checkDate(endDateInput))) * employee.getHourlyRate());
-        double withHoldingTax = SalaryDeductions.calculateWitholdingTax(TaxableIncome);
-        System.out.println("Taxable Income: " + String.format("%.2f", TaxableIncome));
-        System.out.println("Witholding Tax: " + String.format("%.2f", withHoldingTax));     
-        double totalDeductions = SalaryDeductions.calculateSssContribution(employee.getBasicSalary()) + 
-        SalaryDeductions.calculatePagibigContribution(employee.getBasicSalary()) + 
-        SalaryDeductions.calculatePhilhealthContribution(employee.getBasicSalary()) + withHoldingTax;
-        System.out.println("Total Deductions: " + String.format("%.2f", totalDeductions));
-        System.out.println("\nSummary: ");
-        System.out.println("Gross Income: " + String.format("%.2f", grossIncome));
-        System.out.println("Total Benefits: " + String.format("%.2f", totalBenefits));
-        System.out.println("Total Deductions: " + String.format("%.2f", totalDeductions));
-        double netPay = grossIncome + employee.getRiceSubsidy() + employee.getPhoneAllowance() + employee.getClothingAllowance() - totalDeductions;
-        System.out.println("\nTake Home Pay: " + String.format("%.2f", netPay));
+            if (employee == null) {
+                System.out.println("Employee not found.");
+                return;
+            }
+            
+            // Read attendance data
+            List <AttendanceData> AttendanceDATA  =  new AttendanceFileReader().readAttendanceData(new String[]{}); 
+            // Calculate hours of work
+            double hoursOfWorkVar = CalculateHoursOfWork.totalHours(AttendanceDATA, employeeNumber, CalculateHoursOfWork.validateDate(CalculateHoursOfWork.checkDate(startDateInput)), CalculateHoursOfWork.validateDate(CalculateHoursOfWork.checkDate(endDateInput)));
+            double grossIncome = 0;
+            // Display employee details
+            System.out.println("Employee Number: " + employee.getEmployeeNumber());
+            System.out.println("Last Name: " + employee.getLastName());
+            System.out.println("First Name: " + employee.getFirstName());
+            System.out.println("Position: " + employee.getPosition());
+            System.out.println("Status: " + employee.getStatus());
+            System.out.println("\nEarnings");
+            System.out.println("Monthly Rate: " + String.format("%.2f", employee.getBasicSalary()));
+            System.out.println("Hourly Rate: " + String.format("%.2f", employee.getHourlyRate()));
+            System.out.println("Hours of Work: " + ((int)(hoursOfWorkVar) - CalculateHoursOfWork.calculateHoursOfLate(AttendanceDATA,
+            employee.getEmployeeNumber(), CalculateHoursOfWork.validateDate(CalculateHoursOfWork.checkDate(startDateInput)),
+            CalculateHoursOfWork.validateDate(CalculateHoursOfWork.checkDate(endDateInput))))); 
+            // Calculate and display late deduction
+            System.out.println("Late Deduction: " + (CalculateHoursOfWork.calculateHoursOfLate(AttendanceDATA,
+            employee.getEmployeeNumber(), CalculateHoursOfWork.validateDate(CalculateHoursOfWork.checkDate(startDateInput)),
+            CalculateHoursOfWork.validateDate(CalculateHoursOfWork.checkDate(endDateInput))) * employee.getHourlyRate()));
+            grossIncome = (int)(hoursOfWorkVar - CalculateHoursOfWork.calculateHoursOfLate(AttendanceDATA,
+            employee.getEmployeeNumber(), CalculateHoursOfWork.validateDate(CalculateHoursOfWork.checkDate(startDateInput)),
+            CalculateHoursOfWork.validateDate(CalculateHoursOfWork.checkDate(endDateInput))))  * employee.getHourlyRate();
+            System.out.println("Gross Income: " + String.format("%.2f", grossIncome));
+            // Display benefits
+            System.out.println("\nBenefits");
+            System.out.println("Rice Subsidy: " + String.format("%.2f", employee.getRiceSubsidy()));
+            System.out.println("Phone Allowance: " + String.format("%.2f", employee.getPhoneAllowance()));
+            System.out.println("Clothing Allowance: " + String.format("%.2f", employee.getClothingAllowance()));
+            double totalBenefits = employee.getRiceSubsidy() + employee.getPhoneAllowance() + employee.getClothingAllowance();
+            System.out.println("Total Benefits: " + String.format("%.2f
+          // Display deductions
+            System.out.println("\nDeductions");
+            System.out.println("SSS Deductions: " + String.format("%.2f", SalaryDeductions.calculateSssContribution(employee.getBasicSalary()))); 
+            System.out.println("Pag-ibig Contribution: " + String.format("%.2f", SalaryDeductions.calculatePagibigContribution(employee.getBasicSalary())));
+            System.out.println("Philhealth Contribution: " + String.format("%.2f", SalaryDeductions.calculatePhilhealthContribution(employee.getBasicSalary())));
+            double TaxableIncome = employee.getBasicSalary() - SalaryDeductions.calculatePagibigContribution(employee.getBasicSalary()) -
+            SalaryDeductions.calculatePhilhealthContribution(employee.getBasicSalary()) - SalaryDeductions.calculateSssContribution(employee.getBasicSalary())
+            - (CalculateHoursOfWork.calculateHoursOfLate(AttendanceDATA,
+            employee.getEmployeeNumber(), CalculateHoursOfWork.validateDate(CalculateHoursOfWork.checkDate(startDateInput)),
+            CalculateHoursOfWork.validateDate(CalculateHoursOfWork.checkDate(endDateInput))) * employee.getHourlyRate());
+            double withHoldingTax = SalaryDeductions.calculateWitholdingTax(TaxableIncome);
+            System.out.println("Taxable Income: " + String.format("%.2f", TaxableIncome));
+            System.out.println("Witholding Tax: " + String.format("%.2f", withHoldingTax));     
+            double totalDeductions = SalaryDeductions.calculateSssContribution(employee.getBasicSalary()) + 
+            SalaryDeductions.calculatePagibigContribution(employee.getBasicSalary()) + 
+            SalaryDeductions.calculatePhilhealthContribution(employee.getBasicSalary()) + withHoldingTax;
+            System.out.println("Total Deductions: " + String.format("%.2f", totalDeductions));
+            // Display summary
+            System.out.println("\nSummary: ");
+            System.out.println("Gross Income: " + String.format("%.2f", grossIncome));
+            System.out.println("Total Benefits: " + String.format("%.2f", totalBenefits));
+            System.out.println("Total Deductions: " + String.format("%.2f", totalDeductions));
+            double netPay = grossIncome + employee.getRiceSubsidy() + employee.getPhoneAllowance() + employee.getClothingAllowance() - totalDeductions;
+            System.out.println("\nTake Home Pay: " + String.format("%.2f", netPay));
         }
     }  
+    
+    // Method to view employee profiles
     public static void viewEmployeeProfiles() {
         System.out.println("Employee Masterlist Data");
         System.out.println("===========================================");
+        // Display details for each employee
         for (EmployeeData employee : employees) {
             System.out.println("Name: " + employee.getFirstName() + " " + employee.getLastName());
-        System.out.println("Position: " + employee.getPosition());
-        System.out.println("Status: " + employee.getStatus());
-        System.out.println("Birthday: " + employee.getBirthday());
-        System.out.println("Address: " + employee.getAddress());
-        System.out.println("Phone Number: " + employee.getPhoneNumber());
-        System.out.println("SSS #: " + employee.getSssNumber());
-        System.out.println("Philhealth #: " + employee.getPhilhealthNumber());
-        System.out.println("TIN #: " + employee.getTinNumber());
-        System.out.println("Pag-ibig #: " + employee.getPagibigNumber());
-        System.out.println("Basic Salary: " + String.format("%.2f", employee.getBasicSalary()));
+            System.out.println("Position: " + employee.getPosition());
+            System.out.println("Status: " + employee.getStatus());
+            System.out.println("Birthday: " + employee.getBirthday());
+            System.out.println("Address: " + employee.getAddress());
+            System.out.println("Phone Number: " + employee.getPhoneNumber());
+            System.out.println("SSS #: " + employee.getSssNumber());
+            System.out.println("Philhealth #: " + employee.getPhilhealthNumber());
+            System.out.println("TIN #: " + employee.getTinNumber());
+            System.out.println("Pag-ibig #: " + employee.getPagibigNumber());
+            System.out.println("Basic Salary: " + String.format("%.2f", employee.getBasicSalary()));
 
             System.out.println("===========================================");
         }
     }
+    
+    // Method to mark attendance
     public static void markAttendance() {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
-        
         Map<String, List<AttendanceData>> attendanceMap = new HashMap<>();
 
         try {
             File file = new File("C:\\Users\\Gen Calvez\\Documents\\NetBeansProjects\\MotorPH\\src\\main\\java\\com\\mycompany\\motorph\\Attendance.txt");
             Scanner fileScanner = new Scanner(file);
 
+            // Read attendance records from file
             while (fileScanner.hasNextLine()) {
                 String line = fileScanner.nextLine();
                
@@ -247,10 +254,10 @@ public class MotorPH {
                         LocalTime timeIn = LocalTime.parse(tokens[4].trim(), timeFormatter);
                         LocalTime timeOut = LocalTime.parse(tokens[5].trim(), timeFormatter);
 
-                       
+                        // Create AttendanceData object
                         AttendanceData attendanceData = new AttendanceData(date.toString(), timeIn.toString(), timeOut.toString(), employeeNumber, lastName, firstName);
 
-                      
+                        // Add attendance record to map
                         attendanceMap.computeIfAbsent(employeeNumber, k -> new ArrayList<>()).add(attendanceData);
                     } catch (DateTimeParseException e) {
                         System.err.println("Error parsing date/time for line: " + line);
@@ -260,7 +267,7 @@ public class MotorPH {
                 }
             }
 
-           
+            // Print attendance records
             for (Map.Entry<String, List<AttendanceData>> entry : attendanceMap.entrySet()) {
                 String employeeNumber = entry.getKey();
                 List<AttendanceData> records = entry.getValue();
@@ -281,6 +288,4 @@ public class MotorPH {
             System.err.println("Attendance file not found: " + e.getMessage());
         }
     }  
-
-    
 }
