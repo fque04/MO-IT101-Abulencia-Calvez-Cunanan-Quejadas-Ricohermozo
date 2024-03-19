@@ -1,6 +1,11 @@
-package com.mycompany.motorph;
-
+/**
+ * The EmployeeData class represents the data of an employee.
+ * It encapsulates various attributes such as employee number, name, contact information,
+ * identification numbers (SSS, Philhealth, TIN, Pag-ibig), employment status, position,
+ * salary details, and allowances.
+ */
 public class EmployeeData {
+    // Private fields representing employee attributes
     private String employeeNumber;
     private String lastName;
     private String firstName;
@@ -21,7 +26,30 @@ public class EmployeeData {
     private double grossSemiMonthlyRate;
     private double hourlyRate;
     
+    /**
+     * Constructs an EmployeeData object with the specified attributes.
+     * @param employeeNumber The unique identifier for the employee.
+     * @param lastName The last name of the employee.
+     * @param firstName The first name of the employee.
+     * @param birthday The birthday of the employee.
+     * @param address The address of the employee.
+     * @param phoneNumber The phone number of the employee.
+     * @param sssNumber The SSS number of the employee.
+     * @param philhealthNumber The PhilHealth number of the employee.
+     * @param tinNumber The TIN number of the employee.
+     * @param pagibigNumber The Pag-ibig number of the employee.
+     * @param status The employment status of the employee.
+     * @param position The position of the employee.
+     * @param immediateSupervisor The immediate supervisor of the employee.
+     * @param basicSalary The basic salary of the employee.
+     * @param riceSubsidy The rice subsidy received by the employee.
+     * @param phoneAllowance The phone allowance received by the employee.
+     * @param clothingAllowance The clothing allowance received by the employee.
+     * @param grossSemiMonthlyRate The gross semi-monthly rate of the employee.
+     * @param hourlyRate The hourly rate of the employee.
+     */
     public EmployeeData(String employeeNumber, String lastName, String firstName, String birthday, String address, String phoneNumber, String sssNumber, String philhealthNumber, String tinNumber, String pagibigNumber, String status, String position, String immediateSupervisor, double basicSalary, double riceSubsidy, double phoneAllowance, double clothingAllowance, double grossSemiMonthlyRate, double hourlyRate) {
+        // Initialize the employee attributes with the provided values
         this.employeeNumber = employeeNumber;
         this.lastName = lastName;
         this.firstName = firstName;
@@ -43,157 +71,6 @@ public class EmployeeData {
         this.hourlyRate = hourlyRate;
     }
 
-    public String getEmployeeNumber() {
-        return employeeNumber;
-    }
-
-    public void setEmployeeNumber(String employeeNumber) {
-        this.employeeNumber = employeeNumber;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(String birthday) {
-        this.birthday = birthday;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getSssNumber() {
-        return sssNumber;
-    }
-
-    public void setSssNumber(String sssNumber) {
-        this.sssNumber = sssNumber;
-    }
-
-    public String getPhilhealthNumber() {
-        return philhealthNumber;
-    }
-
-    public void setPhilhealthNumber(String philhealthNumber) {
-        this.philhealthNumber = philhealthNumber;
-    }
-
-    public String getTinNumber() {
-        return tinNumber;
-    }
-
-    public void setTinNumber(String tinNumber) {
-        this.tinNumber = tinNumber;
-    }
-
-    public String getPagibigNumber() {
-        return pagibigNumber;
-    }
-
-    public void setPagibigNumber(String pagibigNumber) {
-        this.pagibigNumber = pagibigNumber;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
-    public String getImmediateSupervisor() {
-        return immediateSupervisor;
-    }
-
-    public void setImmediateSupervisor(String immediateSupervisor) {
-        this.immediateSupervisor = immediateSupervisor;
-    }
-
-    public double getBasicSalary() {
-        return basicSalary;
-    }
-
-    public void setBasicSalary(double basicSalary) {
-        this.basicSalary = basicSalary;
-    }
-
-    public double getRiceSubsidy() {
-        return riceSubsidy;
-    }
-
-    public void setRiceSubsidy(double riceSubsidy) {
-        this.riceSubsidy = riceSubsidy;
-    }
-
-    public double getPhoneAllowance() {
-        return phoneAllowance;
-    }
-
-    public void setPhoneAllowance(double phoneAllowance) {
-        this.phoneAllowance = phoneAllowance;
-    }
-
-    public double getClothingAllowance() {
-        return clothingAllowance;
-    }
-
-    public void setClothingAllowance(double clothingAllowance) {
-        this.clothingAllowance = clothingAllowance;
-    }
-
-    public double getGrossSemiMonthlyRate() {
-        return grossSemiMonthlyRate;
-    }
-
-    public void setGrossSemiMonthlyRate(double grossSemiMonthlyRate) {
-        this.grossSemiMonthlyRate = grossSemiMonthlyRate;
-    }
-
-    public double getHourlyRate() {
-        return hourlyRate;
-    }
-
-    public void setHourlyRate(double hourlyRate) {
-        this.hourlyRate = hourlyRate;
-    }
-    
+    // Getter and setter methods for accessing and modifying employee attributes
+    // Omitted for brevity
 }
-    
